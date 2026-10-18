@@ -1,0 +1,38 @@
+#!/usr/bin/env python3
+"""
+IRAM Harness² CLI Entrypoint
+"""
+import sys
+import os
+import argparse
+
+IRAM_HARNESS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+sys.path.insert(0, IRAM_HARNESS_DIR)
+
+from harness2.core import HarnessWorkflow, STATE_DIR
+
+def main():
+    parser = argparse.ArgumentParser(description="IRAM Harness² Cyclic Agent Workflow & Experience Reflector")
+    parser.add_argument("task", nargs="*", help="Task or goal description")
+    parser.add_argument("--history", action="store_true", help="List past episodic execution traces")
+    parser.add_argument("--iterations", "-i", type=int, default=3, help="Max self-healing iterations")
+    parser.add_argument("--verbose", "-v", action="store_true", help="Verbose telemetry")
+    args = parser.parse_args()
+
+    if args.history:
+        runs = sorted(os.listdir(STATE_DIR), reverse=True)
+        print("Past Harness² Executions:")
+        for r in runs[:10]:
+            print(f"  • {r}")
+        return
+
+    if not args.task:
+        parser.print_help()
+        sys.exit(1)
+
+    task_str = " ".join(args.task)
+    workflow = HarnessWorkflow(task_str, max_iterations=args.iterations, verbose=args.verbose)
+    workflow.run()
+
+if __name__ == "__main__":
+    main()
