@@ -6,7 +6,7 @@ import sys
 import os
 import argparse
 
-IRAM_HARNESS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+IRAM_HARNESS_DIR = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
 sys.path.insert(0, IRAM_HARNESS_DIR)
 
 from harness2.core import HarnessWorkflow, STATE_DIR
